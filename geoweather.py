@@ -1,3 +1,4 @@
+#!/usr/bin/python
 import re
 import sys
 import pygeoip
@@ -46,23 +47,34 @@ def parse_weather(data):
 
 if __name__ == '__main__':
 
-    if len(sys.argv)> 1:
-        ip = sys.argv[1]
-        if not re.match(r'[0-9]+(?:\.[0-9]+){3}', ip):
-            print 'Input is not a valid IP address!'
-            exit(2)
-    else:
-        print 'Missing IP address input!'
-        exit(2)
+    env = {}
+    tests = 0;
 
-    lat, long, city, country = get_coordinates(ip)
-    data = get_weather_data(lat, long)
-    temp, humidity, condition, wind, bearing, pressure = parse_weather(data)
+    while 1:
+        line = sys.stdin.readline().strip()
+        if line == '':
+            break
 
-    sentence = ('Current weather in ' + city + ' ' + country + ' is '+ condition
-                + ', ' + temp + ' degrees Celcius with ' + humidity
-                + ' percent relative humidity. Wind speed is ' + wind
-                + ' kilometres per hour ' + 'bearing ' + bearing
-                + ' degrees with air pressure at ' + pressure + ' kilopascals.')
+        ip = ''
+        key, data = line.split(':')
+        key = key.strip()
+        data = data.strip()
+        if key == 'agi_arg_1':
+            ip = data
 
-    print sentence
+        if not ip:
+            sys.stderr.write('No IP found.\n')
+            sys.stderr.flush()
+        else:
+            lat, long, city, country = get_coordinates(ip)
+            data = get_weather_data(lat, long)
+            temp, humidity, condition, wind, bearing, pressure = parse_weather(data)
+
+            sentence = ('Current weather in ' + city + ' ' + country + ' is '+ condition
+                        + ', ' + temp + ' degrees Celcius with ' + humidity
+                        + ' percent relative humidity. Wind speed is ' + wind
+                        + ' kilometres per hour ' + 'bearing ' + bearing
+                        + ' degrees with air pressure at ' + pressure + ' kilopascals.')
+
+            sys.stdout.write('exec flite "' + sentence + '", any\n')
+            sys.stdout.flush()
