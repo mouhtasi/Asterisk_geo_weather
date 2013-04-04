@@ -61,7 +61,7 @@ if __name__ == '__main__':
 
     sentence = ('Current weather in ' + city + ' ' + country + ' is '+ condition
                 + ', ' + temp + ' degrees Celcius with ' + humidity
-                + ' percent humidity. Wind speed is ' + wind
+                + ' percent relative humidity. Wind speed is ' + wind
                 + ' kilometres per hour ' + 'bearing ' + bearing
                 + ' degrees with air pressure at ' + pressure + ' kilopascals.')
 
